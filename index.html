@@ -1,15 +1,77 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نمونه PWA</title>
-  <!-- manifest.json را به صفحه لینک می‌دهیم -->
-  <link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<title>قطب‌نمای قبله</title>
+<style>
+  body { display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f0f0; }
+  #compass {
+    width:200px; height:200px; border:5px solid #333; border-radius:50%;
+    position:relative; display:flex; justify-content:center; align-items:center;
+    background:white;
+  }
+  #needle {
+    width:4px; height:100px; background:red; position:absolute; top:0;
+    transform-origin:bottom center;
+    transition: transform 0.5s ease;
+  }
+</style>
 </head>
 <body>
-  <h1>سلام! این یک PWA ساده است.</h1>
 
-  <script src="app.js"></script>
+<div id="compass">
+  <div id="needle"></div>
+</div>
+
+<script>
+const needle = document.getElementById('needle');
+
+// مختصات کعبه
+const kaabaLat = 21.4225;
+const kaabaLng = 39.8262;
+
+// دریافت موقعیت کاربر
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(position => {
+    const userLat = position.coords.latitude;
+    const userLng = position.coords.longitude;
+
+    // محاسبه زاویه قبله
+    function getQiblaAngle(lat1, lon1) {
+      const φ1 = lat1 * Math.PI/180;
+      const φ2 = kaabaLat * Math.PI/180;
+      const Δλ = (kaabaLng - lon1) * Math.PI/180;
+      const y = Math.sin(Δλ) * Math.cos(φ2);
+      const x = Math.cos(φ1)*Math.sin(φ2) -
+                Math.sin(φ1)*Math.cos(φ2)*Math.cos(Δλ);
+      let θ = Math.atan2(y, x);
+      θ = θ * 180/Math.PI; // تبدیل به درجه
+      return (θ + 360) % 360; // زاویه بین 0 تا 360
+    }
+
+    const qiblaAngle = getQiblaAngle(userLat, userLng);
+
+    // استفاده از DeviceOrientationEvent برای چرخش قطب نما
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', event => {
+        const alpha = event.alpha; // جهت شمال
+        const rotation = qiblaAngle - alpha;
+        needle.style.transform = `rotate(${rotation}deg)`;
+      }, true);
+    } else {
+      alert('این دستگاه از سنسور قطب‌نما پشتیبانی نمی‌کند.');
+    }
+
+  }, error => {
+    alert('مکان‌یابی فعال نیست یا مجوز داده نشده.');
+  });
+} else {
+  alert('مرورگر شما از Geolocation پشتیبانی نمی‌کند.');
+}
+</script>
+<script src="app.js"></script>
 </body>
 </html>
+
+  
+
