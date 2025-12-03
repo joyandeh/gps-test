@@ -2,82 +2,39 @@
 <html lang="fa">
 <head>
 <meta charset="UTF-8">
-<title>قبله‌یاب با اعداد</title>
+<title>جهت شمال</title>
 <style>
-  body { font-family: sans-serif; display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; background:#f0f0f0; }
-  #info { font-size: 20px; }
+  body { font-family: sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f0f0; }
+  #north { font-size: 24px; }
 </style>
 </head>
 <body>
 
-<div id="info">در حال دریافت داده‌ها...</div>
+<div id="north">در حال دریافت شمال...</div>
 
 <script>
-const info = document.getElementById('info');
+const northDiv = document.getElementById('north');
 
-// مختصات کعبه
-const kaabaLat = 21.4225;
-const kaabaLng = 39.8262;
-
-// محاسبه زاویه قبله نسبت به شمال جغرافیایی
-function getQiblaAngle(lat1, lon1) {
-  const φ1 = lat1 * Math.PI/180;
-  const φ2 = kaabaLat * Math.PI/180;
-  const Δλ = (kaabaLng - lon1) * Math.PI/180;
-  const y = Math.sin(Δλ) * Math.cos(φ2);
-  const x = Math.cos(φ1)*Math.sin(φ2) -
-            Math.sin(φ1)*Math.cos(φ2)*Math.cos(Δλ);
-  let θ = Math.atan2(y, x);
-  θ = θ * 180/Math.PI;
-  return (θ + 360) % 360;
+function showNorth(event) {
+  const alpha = event.alpha; // زاویه نسبت به شمال مغناطیسی
+  northDiv.innerHTML = `شمال مغناطیسی: ${alpha?.toFixed(2)}°`;
 }
 
-// گرفتن موقعیت GPS
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(position => {
-    const userLat = position.coords.latitude;
-    const userLng = position.coords.longitude;
-    const qiblaAngle = getQiblaAngle(userLat, userLng);
-
-    info.innerHTML = `
-      <b>موقعیت شما:</b> ${userLat.toFixed(6)}, ${userLng.toFixed(6)}<br>
-      <b>زاویه قبله نسبت به شمال جغرافیایی:</b> ${qiblaAngle.toFixed(2)}°
-    `;
-
-    // سنسور جهت‌یابی
-    function handleOrientation(event) {
-      const alpha = event.alpha; // جهت شمال مغناطیسی
-      const rotation = (qiblaAngle - alpha + 360) % 360; // زاویه قبله
-      info.innerHTML = `
-        <b>موقعیت شما:</b> ${userLat.toFixed(6)}, ${userLng.toFixed(6)}<br>
-        <b>زاویه قبله نسبت به شمال جغرافیایی:</b> ${qiblaAngle.toFixed(2)}°<br>
-        <b>alpha (شمال مغناطیسی):</b> ${alpha?.toFixed(2)}°<br>
-        <b>زاویه برای قبله:</b> ${rotation.toFixed(2)}°
-      `;
-    }
-
-    // iOS 13+ نیاز به اجازه دارد
-    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-      DeviceOrientationEvent.requestPermission()
-        .then(response => {
-          if (response === 'granted') {
-            window.addEventListener('deviceorientation', handleOrientation);
-          } else {
-            info.innerHTML += '<br>دسترسی به سنسور داده نشده.';
-          }
-        })
-        .catch(console.error);
-    } else if (window.DeviceOrientationEvent) {
-      window.addEventListener('deviceorientation', handleOrientation);
-    } else {
-      info.innerHTML += '<br>سنسور جهت‌یابی پشتیبانی نمی‌شود.';
-    }
-
-  }, error => {
-    info.innerHTML = 'خطا در دریافت موقعیت: ' + error.message;
-  });
+// برای iOS 13+ نیاز به اجازه است
+if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+  DeviceOrientationEvent.requestPermission()
+    .then(response => {
+      if (response === 'granted') {
+        window.addEventListener('deviceorientation', showNorth);
+      } else {
+        northDiv.innerHTML = 'دسترسی به سنسور داده نشده.';
+      }
+    })
+    .catch(console.error);
+} else if (window.DeviceOrientationEvent) {
+  window.addEventListener('deviceorientation', showNorth);
 } else {
-  info.innerHTML = 'مرورگر شما از Geolocation پشتیبانی نمی‌کند.';
+  northDiv.innerHTML = 'سنسور جهت‌یابی پشتیبانی نمی‌شود.';
 }
 </script>
 
