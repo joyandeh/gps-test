@@ -1,18 +1,15 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa">
-<head><meta charset="utf-8"><title>GPS</title></head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نمونه PWA</title>
+  <!-- manifest.json را به صفحه لینک می‌دهیم -->
+  <link rel="manifest" href="manifest.json">
+</head>
 <body>
-<button id="btn">گرفتن مختصات</button>
-<div id="out">-</div>
-<script>
-document.getElementById('btn').onclick = function(){
-  if(!navigator.geolocation){ document.getElementById('out').textContent = 'پشتیبانی نمی‌شود'; return; }
-  navigator.geolocation.getCurrentPosition(function(p){
-    document.getElementById('out').textContent = 'عرض: ' + p.coords.latitude.toFixed(6) + ' طول: ' + p.coords.longitude.toFixed(6);
-  }, function(e){
-    document.getElementById('out').textContent = 'خطا: ' + (e.message || e.code);
-  }, { enableHighAccuracy:true, timeout:10000 });
-};
-</script>
+  <h1>سلام! این یک PWA ساده است.</h1>
+
+  <script src="app.js"></script>
 </body>
 </html>
