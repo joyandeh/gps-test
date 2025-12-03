@@ -2,83 +2,46 @@
 <html lang="fa">
 <head>
 <meta charset="UTF-8">
-<title>قطب‌نمای قبله با اعداد</title>
+<title>سنسور جهت‌یابی</title>
 <style>
-  body { font-family: sans-serif; display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; background:#f0f0f0; }
-  #info { font-size: 20px; margin: 10px; }
+  body { font-family: sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f0f0; }
+  #data { font-size: 20px; }
 </style>
 </head>
 <body>
 
-<div id="info">در حال دریافت اطلاعات...</div>
+<div id="data">در حال دریافت داده‌ها...</div>
 
 <script>
-const info = document.getElementById('info');
+const dataDiv = document.getElementById('data');
 
-// مختصات کعبه
-const kaabaLat = 21.4225;
-const kaabaLng = 39.8262;
+function handleOrientation(event) {
+  const alpha = event.alpha; // چرخش حول محور Z (شمال مغناطیسی)
+  const beta  = event.beta;  // چرخش حول محور X (خم شدن جلو/عقب)
+  const gamma = event.gamma; // چرخش حول محور Y (خم شدن چپ/راست)
 
-// محاسبه زاویه قبله از موقعیت کاربر
-function getQiblaAngle(lat1, lon1) {
-  const φ1 = lat1 * Math.PI/180;
-  const φ2 = kaabaLat * Math.PI/180;
-  const Δλ = (kaabaLng - lon1) * Math.PI/180;
-  const y = Math.sin(Δλ) * Math.cos(φ2);
-  const x = Math.cos(φ1)*Math.sin(φ2) -
-            Math.sin(φ1)*Math.cos(φ2)*Math.cos(Δλ);
-  let θ = Math.atan2(y, x);
-  θ = θ * 180/Math.PI;
-  return (θ + 360) % 360;
+  dataDiv.innerHTML = `
+    <b>alpha (شمال مغناطیسی):</b> ${alpha?.toFixed(2)}°<br>
+    <b>beta (خم جلو/عقب):</b> ${beta?.toFixed(2)}°<br>
+    <b>gamma (خم چپ/راست):</b> ${gamma?.toFixed(2)}°
+  `;
 }
 
-// گرفتن موقعیت GPS
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(position => {
-    const userLat = position.coords.latitude;
-    const userLng = position.coords.longitude;
-    const qiblaAngle = getQiblaAngle(userLat, userLng);
-
-    info.innerHTML = `
-      <b>موقعیت شما:</b> ${userLat.toFixed(6)}, ${userLng.toFixed(6)}<br>
-      <b>زاویه قبله نسبت به شمال جغرافیایی:</b> ${qiblaAngle.toFixed(2)}°
-    `;
-
-    // بررسی وجود DeviceOrientationEvent
-    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-      // iOS 13+
-      DeviceOrientationEvent.requestPermission()
-        .then(response => {
-          if (response === 'granted') {
-            window.addEventListener('deviceorientation', eventHandler);
-          } else {
-            info.innerHTML += '<br>دسترسی به سنسور جهت‌یابی داده نشده.';
-          }
-        })
-        .catch(console.error);
-    } else if (window.DeviceOrientationEvent) {
-      // اندروید یا مرورگرهای دیگر
-      window.addEventListener('deviceorientation', eventHandler);
-    } else {
-      info.innerHTML += '<br>این مرورگر از سنسور جهت‌یابی پشتیبانی نمی‌کند.';
-    }
-
-    function eventHandler(event) {
-      const alpha = event.alpha; // جهت شمال مغناطیسی
-      const rotation = (qiblaAngle - alpha + 360) % 360;
-      info.innerHTML = `
-        <b>موقعیت شما:</b> ${userLat.toFixed(6)}, ${userLng.toFixed(6)}<br>
-        <b>زاویه قبله نسبت به شمال جغرافیایی:</b> ${qiblaAngle.toFixed(2)}°<br>
-        <b>جهت شمال مغناطیسی (alpha):</b> ${alpha.toFixed(2)}°<br>
-        <b>زاویه برای چرخش سوزن قبله:</b> ${rotation.toFixed(2)}°
-      `;
-    }
-
-  }, error => {
-    info.innerHTML = 'خطا در دریافت موقعیت: ' + error.message;
-  });
+// درخواست اجازه در iOS 13+
+if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+  DeviceOrientationEvent.requestPermission()
+    .then(response => {
+      if (response === 'granted') {
+        window.addEventListener('deviceorientation', handleOrientation);
+      } else {
+        dataDiv.innerHTML = 'دسترسی به سنسور جهت‌یابی داده نشده.';
+      }
+    })
+    .catch(console.error);
+} else if (window.DeviceOrientationEvent) {
+  window.addEventListener('deviceorientation', handleOrientation);
 } else {
-  info.innerHTML = 'مرورگر شما از Geolocation پشتیبانی نمی‌کند.';
+  dataDiv.innerHTML = 'این مرورگر از سنسور جهت‌یابی پشتیبانی نمی‌کند.';
 }
 </script>
 
