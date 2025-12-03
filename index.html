@@ -2,76 +2,85 @@
 <html lang="fa">
 <head>
 <meta charset="UTF-8">
-<title>قطب‌نمای قبله</title>
+<title>قطب‌نمای قبله با اعداد</title>
 <style>
-  body { display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f0f0; }
-  #compass {
-    width:200px; height:200px; border:5px solid #333; border-radius:50%;
-    position:relative; display:flex; justify-content:center; align-items:center;
-    background:white;
-  }
-  #needle {
-    width:4px; height:100px; background:red; position:absolute; top:0;
-    transform-origin:bottom center;
-    transition: transform 0.5s ease;
-  }
+  body { font-family: sans-serif; display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; background:#f0f0f0; }
+  #info { font-size: 20px; margin: 10px; }
 </style>
 </head>
 <body>
 
-<div id="compass">
-  <div id="needle"></div>
-</div>
+<div id="info">در حال دریافت اطلاعات...</div>
 
 <script>
-const needle = document.getElementById('needle');
+const info = document.getElementById('info');
 
 // مختصات کعبه
 const kaabaLat = 21.4225;
 const kaabaLng = 39.8262;
 
-// دریافت موقعیت کاربر
+// محاسبه زاویه قبله از موقعیت کاربر
+function getQiblaAngle(lat1, lon1) {
+  const φ1 = lat1 * Math.PI/180;
+  const φ2 = kaabaLat * Math.PI/180;
+  const Δλ = (kaabaLng - lon1) * Math.PI/180;
+  const y = Math.sin(Δλ) * Math.cos(φ2);
+  const x = Math.cos(φ1)*Math.sin(φ2) -
+            Math.sin(φ1)*Math.cos(φ2)*Math.cos(Δλ);
+  let θ = Math.atan2(y, x);
+  θ = θ * 180/Math.PI;
+  return (θ + 360) % 360;
+}
+
+// گرفتن موقعیت GPS
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(position => {
     const userLat = position.coords.latitude;
     const userLng = position.coords.longitude;
-
-    // محاسبه زاویه قبله
-    function getQiblaAngle(lat1, lon1) {
-      const φ1 = lat1 * Math.PI/180;
-      const φ2 = kaabaLat * Math.PI/180;
-      const Δλ = (kaabaLng - lon1) * Math.PI/180;
-      const y = Math.sin(Δλ) * Math.cos(φ2);
-      const x = Math.cos(φ1)*Math.sin(φ2) -
-                Math.sin(φ1)*Math.cos(φ2)*Math.cos(Δλ);
-      let θ = Math.atan2(y, x);
-      θ = θ * 180/Math.PI; // تبدیل به درجه
-      return (θ + 360) % 360; // زاویه بین 0 تا 360
-    }
-
     const qiblaAngle = getQiblaAngle(userLat, userLng);
 
-    // استفاده از DeviceOrientationEvent برای چرخش قطب نما
-    if (window.DeviceOrientationEvent) {
-      window.addEventListener('deviceorientation', event => {
-        const alpha = event.alpha; // جهت شمال
-        const rotation = qiblaAngle - alpha;
-        needle.style.transform = `rotate(${rotation}deg)`;
-      }, true);
+    info.innerHTML = `
+      <b>موقعیت شما:</b> ${userLat.toFixed(6)}, ${userLng.toFixed(6)}<br>
+      <b>زاویه قبله نسبت به شمال جغرافیایی:</b> ${qiblaAngle.toFixed(2)}°
+    `;
+
+    // بررسی وجود DeviceOrientationEvent
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      // iOS 13+
+      DeviceOrientationEvent.requestPermission()
+        .then(response => {
+          if (response === 'granted') {
+            window.addEventListener('deviceorientation', eventHandler);
+          } else {
+            info.innerHTML += '<br>دسترسی به سنسور جهت‌یابی داده نشده.';
+          }
+        })
+        .catch(console.error);
+    } else if (window.DeviceOrientationEvent) {
+      // اندروید یا مرورگرهای دیگر
+      window.addEventListener('deviceorientation', eventHandler);
     } else {
-      alert('این دستگاه از سنسور قطب‌نما پشتیبانی نمی‌کند.');
+      info.innerHTML += '<br>این مرورگر از سنسور جهت‌یابی پشتیبانی نمی‌کند.';
+    }
+
+    function eventHandler(event) {
+      const alpha = event.alpha; // جهت شمال مغناطیسی
+      const rotation = (qiblaAngle - alpha + 360) % 360;
+      info.innerHTML = `
+        <b>موقعیت شما:</b> ${userLat.toFixed(6)}, ${userLng.toFixed(6)}<br>
+        <b>زاویه قبله نسبت به شمال جغرافیایی:</b> ${qiblaAngle.toFixed(2)}°<br>
+        <b>جهت شمال مغناطیسی (alpha):</b> ${alpha.toFixed(2)}°<br>
+        <b>زاویه برای چرخش سوزن قبله:</b> ${rotation.toFixed(2)}°
+      `;
     }
 
   }, error => {
-    alert('مکان‌یابی فعال نیست یا مجوز داده نشده.');
+    info.innerHTML = 'خطا در دریافت موقعیت: ' + error.message;
   });
 } else {
-  alert('مرورگر شما از Geolocation پشتیبانی نمی‌کند.');
+  info.innerHTML = 'مرورگر شما از Geolocation پشتیبانی نمی‌کند.';
 }
 </script>
-<script src="app.js"></script>
+
 </body>
 </html>
-
-  
-
