@@ -1,9 +1,9 @@
 const CACHE_NAME = 'pwa-cache-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/app.js',
-  '/manifest.json'
+  './',
+  './index.html',
+  './app.js',
+  './manifest.json'
 ];
 
 self.addEventListener('install', event => {
@@ -19,3 +19,4 @@ self.addEventListener('fetch', event => {
       .then(response => response || fetch(event.request))
   );
 });
+
