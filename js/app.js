@@ -46,17 +46,18 @@ function showPrayTimes(lat, lon) {
 
     const times = pray.getTimes(new Date());
     outputDiv.innerHTML = `
-        <ul>
-            <li>Fajr: ${times.fajr}</li>
-            <li>Sunrise: ${times.sunrise}</li>
-            <li>Dhuhr: ${times.dhuhr}</li>
-            <li>Asr: ${times.asr}</li>
-            <li>Sunset: ${times.sunset}</li>
-            <li>Maghrib: ${times.maghrib}</li>
-            <li>Isha: ${times.isha}</li>
-            <li>Midnight: ${times.midnight}</li>
-        </ul>
+        <ul dir="rtl" style="text-align: right;">
+    <li>اذان صبح: ${times.fajr}</li>
+    <li>طلوع آفتاب: ${times.sunrise}</li>
+    <li>اذان ظهر: ${times.dhuhr}</li>
+    <li>عصر: ${times.asr}</li>
+    <li>غروب آفتاب: ${times.sunset}</li>
+    <li>اذان مغرب: ${times.maghrib}</li>
+    <li>عشاء: ${times.isha}</li>
+    <li>نیمه‌شب: ${times.midnight}</li>
+</ul>
     `;
 }
+
 
 
