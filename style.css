@@ -1,0 +1,91 @@
+/* --- فونت و رنگ‌ها --- */
+body {
+    font-family: 'Vazir', sans-serif;
+    background-color: #fff8e1; /* زرد روشن */
+    color: #000;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    max-width: 500px;
+    width: 95%;
+    padding: 20px;
+}
+
+h3 {
+    color: #ff6f00; /* نارنجی پررنگ */
+    margin-bottom: 10px;
+}
+
+/* --- باکس جستجو --- */
+#cityBox {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 2px solid #ff6f00;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+/* --- نتایج جستجو --- */
+#results {
+    border: 1px solid #ff6f00;
+    border-radius: 8px;
+    background-color: #fff3e0;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+#results div {
+    padding: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #ffd180;
+}
+
+#results div:last-child {
+    border-bottom: none;
+}
+
+#results div:hover {
+    background-color: #ffe0b2;
+}
+
+/* --- بخش اوقات شرعی --- */
+#output {
+    background-color: #ffecb3;
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid #ff6f00;
+}
+
+#output ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#output li {
+    padding: 6px 0;
+    font-size: 16px;
+}
+
+/* --- ریسپانسیو موبایل --- */
+@media (max-width: 600px) {
+    #cityBox {
+        font-size: 18px;
+        padding: 14px;
+    }
+
+    #output li {
+        font-size: 18px;
+    }
+
+    h3 {
+        font-size: 20px;
+    }
+}
