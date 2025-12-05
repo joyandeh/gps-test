@@ -1,7 +1,7 @@
 /* --- فونت و رنگ‌ها --- */
 body {
     font-family: 'Vazir', sans-serif;
-    background-color: #fff8e1; /* زرد روشن */
+    background-color: #eba834; /* زرد روشن */
     color: #000;
     margin: 0;
     padding: 0;
@@ -89,3 +89,4 @@ h3 {
         font-size: 20px;
     }
 }
+
