@@ -1,42 +1,29 @@
+
 <!DOCTYPE html>
 <html lang="fa">
 <head>
 <meta charset="UTF-8">
-<title>جهت شمال</title>
-<style>
-  body { font-family: sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f0f0; }
-  #north { font-size: 24px; }
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اوقات شرعی بر اساس شهر</title>
+<!-- فایل CSS جداگانه -->
+<link rel="stylesheet" href="css/style.css">
+<link rel="manifest" href="'manifest.json">
+<meta name="theme-color" content="#ff6f00">
+
 </head>
 <body>
+<div class="container">
+    <h3>نام شهر را وارد کنید</h3>
+    <input type="text" id="cityBox" placeholder="مثلاً تهران">
+    <div id="results"></div>
 
-<div id="north">در حال دریافت شمال...</div>
-
-<script>
-const northDiv = document.getElementById('north');
-
-function showNorth(event) {
-  const alpha = event.alpha; // زاویه نسبت به شمال مغناطیسی
-  northDiv.innerHTML = `شمال مغناطیسی: ${alpha?.toFixed(2)}°`;
-}
-
-// برای iOS 13+ نیاز به اجازه است
-if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-  DeviceOrientationEvent.requestPermission()
-    .then(response => {
-      if (response === 'granted') {
-        window.addEventListener('deviceorientation', showNorth);
-      } else {
-        northDiv.innerHTML = 'دسترسی به سنسور داده نشده.';
-      }
-    })
-    .catch(console.error);
-} else if (window.DeviceOrientationEvent) {
-  window.addEventListener('deviceorientation', showNorth);
-} else {
-  northDiv.innerHTML = 'سنسور جهت‌یابی پشتیبانی نمی‌شود.';
-}
-</script>
-
+    <h3>اوقات شرعی امروز</h3>
+    <div id="output"></div>
+</div>
+    
+<!-- فایل‌های جاوااسکریپت -->
+<script src="js/praytime.js"></script>
+<script src="js/cities.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
