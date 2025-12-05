@@ -1,7 +1,7 @@
 const CACHE_NAME = 'praytimes-cache-v1';
 const urlsToCache = [
     '/',
-    '/index.html',
+    './index.html',
     '/css/style.css',
     '/js/app.js',
     '/js/cities.js'
@@ -24,5 +24,6 @@ self.addEventListener('fetch', event => {
         .then(response => response || fetch(event.request))
     );
 });
+
 
 
