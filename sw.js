@@ -1,8 +1,12 @@
 const CACHE_NAME = 'praytimes-cache-v1';
 const urlsToCache = [
     '/',
-    '/static/js/main.js',
-    '/static/manifest.json'
+    '/index.html',
+    '/css/style.css',
+    '/js/app.js',
+    '/js/cities.js'
+    '/js/praytime.js',
+    '/manifest.json'
 ];
 
 // کش کردن فایل‌ها هنگام نصب SW
@@ -20,3 +24,4 @@ self.addEventListener('fetch', event => {
         .then(response => response || fetch(event.request))
     );
 });
+
