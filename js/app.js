@@ -1,12 +1,14 @@
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/js/sw.js').then(reg => {
-        console.log('Service Worker ثبت شد:', reg);
-      }).catch(err => {
-        console.log('ثبت Service Worker شکست خورد:', err);
-      });
+      navigator.serviceWorker.register('/gps-test/js/sw.js', { scope: '/gps-test/' })
+        .then(reg => {
+          console.log('Service Worker ثبت شد:', reg);
+        })
+        .catch(err => {
+          console.log('ثبت Service Worker شکست خورد:', err);
+        });
     });
-  }
+}
 
 const cityBox = document.getElementById('cityBox');
 const resultsDiv = document.getElementById('results');
@@ -58,6 +60,7 @@ function showPrayTimes(lat, lon) {
 </ul>
     `;
 }
+
 
 
 
