@@ -1,12 +1,12 @@
 const CACHE_NAME = 'praytimes-cache-v1';
 const urlsToCache = [
-    '/',
-    '/index.html',
-    '/css/style.css',
-    '/js/app.js',
-    '/js/cities.js',
-    '/js/praytime.js',
-    '/manifest.json'
+    '/gps-test/',                // start page
+    '/gps-test/index.html',
+    '/gps-test/css/style.css',
+    '/gps-test/js/app.js',
+    '/gps-test/js/cities.js',
+    '/gps-test/js/praytime.js',
+    '/gps-test/manifest.json'
 ];
 
 // کش کردن فایل‌ها هنگام نصب SW
@@ -24,6 +24,7 @@ self.addEventListener('fetch', event => {
         .then(response => response || fetch(event.request))
     );
 });
+
 
 
 
