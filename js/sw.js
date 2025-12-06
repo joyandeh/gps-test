@@ -2,6 +2,7 @@ const CACHE_NAME = 'praytimes-cache-v1';
 const urlsToCache = [
     '/gps-test/',                // start page
     '/gps-test/index.html',
+    '/gps-test/cities.csv',
     '/gps-test/css/style.css',
     '/gps-test/js/app.js',
     '/gps-test/js/cities.js',
@@ -24,6 +25,7 @@ self.addEventListener('fetch', event => {
         .then(response => response || fetch(event.request))
     );
 });
+
 
 
 
