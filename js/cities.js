@@ -1,7 +1,7 @@
 let cities = [];
 
 // خواندن CSV و تبدیل به آرایه اشیاء
-fetch("cities.csv")
+fetch("/gps-test/cities.csv")
     .then(res => res.text())
     .then(parseCSV)
     .catch(err => console.error("خطا در خواندن CSV:", err));
@@ -17,4 +17,5 @@ function parseCSV(text) {
         };
     });
 }
+
 
