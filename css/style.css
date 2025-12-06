@@ -7,6 +7,8 @@ body {
     padding: 0;
     display: flex;
     justify-content: center;
+    direction: rtl;   /* متن راست‌چین */
+    text-align: right;
 }
 
 .container {
@@ -61,3 +63,4 @@ h3 {
 
 #results div:hover {
     background-color: #332100; /* نارنجی خی*
+
