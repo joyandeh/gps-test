@@ -34,6 +34,7 @@ function selectCity(city) {
     cityBox.value = city.name;
     resultsDiv.innerHTML = '';
     showPrayTimes(city.latitude, city.longitude);
+    localStorage.setItem('lastCity', JSON.stringify(city));
 }
 
 // نمایش اوقات شرعی بر اساس طول و عرض
@@ -57,6 +58,7 @@ function showPrayTimes(lat, lon) {
 </ul>
     `;
 }
+
 
 
 
