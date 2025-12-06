@@ -1,6 +1,6 @@
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/gps-test/js/sw.js', { scope: '/gps-test/' })
+        navigator.serviceWorker.register('/gps-test/sw.js', { scope: '/gps-test/' })
             .then(reg => console.log('Service Worker ثبت شد:', reg))
             .catch(err => console.log('ثبت Service Worker شکست خورد:', err));
     });
@@ -57,6 +57,7 @@ function showPrayTimes(lat, lon) {
 </ul>
     `;
 }
+
 
 
 
