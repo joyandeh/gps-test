@@ -59,6 +59,14 @@ function showPrayTimes(lat, lon) {
     `;
 }
 
+function initDefaultCity() {
+    const lastCity = JSON.parse(localStorage.getItem('lastCity'));
+    if (lastCity) {
+        selectCity(lastCity);
+    } else if (cities.length > 0) {
+        selectCity(cities[0]);
+    }
+}
 
 
 
