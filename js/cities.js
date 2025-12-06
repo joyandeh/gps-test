@@ -7,7 +7,7 @@ fetch("/gps-test/cities.csv")
     .catch(err => console.error("خطا در خواندن CSV:", err));
 
 function parseCSV(text) {
-    const lines = text.trim().split('\n').slice(1); // حذف header
+    const lines = text.trim().split('\n').slice(1);
     cities = lines.map(line => {
         const values = line.split(',').map(v => v.trim());
         return {
@@ -16,6 +16,10 @@ function parseCSV(text) {
             longitude: parseFloat(values[4])
         };
     });
+
+    // نمایش آخرین شهر یا پیش‌فرض
+    initDefaultCity();
 }
+
 
 
