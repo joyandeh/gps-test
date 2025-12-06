@@ -1,8 +1,7 @@
 const CACHE_NAME = 'praytimes-cache-v1';
 const urlsToCache = [
-    '/gps-test/',                // start page
+    '/gps-test/',
     '/gps-test/index.html',
-    '/gps-test/cities.csv',
     '/gps-test/css/style.css',
     '/gps-test/js/app.js',
     '/gps-test/js/cities.js',
@@ -10,24 +9,21 @@ const urlsToCache = [
     '/gps-test/manifest.json'
 ];
 
-// کش کردن فایل‌ها هنگام نصب SW
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
         .then(cache => cache.addAll(urlsToCache))
+        .then(() => self.skipWaiting()) // فوراً SW جدید فعال شود
     );
 });
 
-// پاسخ به درخواست‌ها از کش
+self.addEventListener('activate', event => {
+    event.waitUntil(self.clients.claim()); // کنترل همه تب‌ها را بگیرد
+});
+
 self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request)
         .then(response => response || fetch(event.request))
     );
 });
-
-
-
-
-
-
