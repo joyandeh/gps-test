@@ -2,21 +2,21 @@
   "name": "اوقات شرعی",
   "short_name": "اوقات",
   "description": "نمایش اوقات شرعی بر اساس شهر",
-  "start_url": "/",
+  "start_url": "/gps-test/",
+  "scope": "/gps-test/",
   "display": "standalone",
   "background_color": "#fff8e1",
   "theme_color": "#ff6f00",
   "icons": [
-  {
-    "src": "/static/icons/icon-192.png",
-    "sizes": "192x192",
-    "type": "image/png"
-  },
-  {
-    "src": "/static/icons/icon-512.png",
-    "sizes": "512x512",
-    "type": "image/png"
-  }
-]
-  
+    {
+      "src": "/gps-test/static/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/gps-test/static/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
