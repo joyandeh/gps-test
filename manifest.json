@@ -14,9 +14,10 @@
       "type": "image/png"
     },
     {
-      "src": "/gps-test/static/icons/icon-512.png",
+      "src": "/gps-test/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
   ]
 }
+
