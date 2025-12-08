@@ -1,13 +1,13 @@
-/* --- فونت و رنگ‌ها --- */
+/* --- فونت و رنگ‌های جدید هنری --- */
 body {
     font-family: 'Vazir', sans-serif;
-    background-color: #000; /* مشکی */
-    color: #ffa733; /* نارنجی روشن */
+    background: linear-gradient(180deg, #ff9a3c, #ff6f00); /* گرادینت نارنجی */
+    color: #2b1a00; /* قهوه‌ای خیلی تیره */
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
-    direction: rtl;   /* متن راست‌چین */
+    direction: rtl;
     text-align: right;
 }
 
@@ -15,12 +15,15 @@ body {
     max-width: 500px;
     width: 95%;
     padding: 20px;
+    backdrop-filter: blur(3px);
 }
 
-/* تیترها */
+/* --- تیترها --- */
 h3 {
-    color: #ff7b00; /* نارنجی */
+    color: #3b1f00;
     margin-bottom: 10px;
+    font-weight: bold;
+    text-shadow: 0px 0px 3px rgba(0,0,0,0.25);
 }
 
 /* --- باکس جستجو --- */
@@ -28,33 +31,36 @@ h3 {
     width: 100%;
     padding: 12px 15px;
     font-size: 16px;
-    border: 2px solid #ff7b00;
-    border-radius: 8px;
+    border: 2px solid #3b1f00;
+    border-radius: 10px;
     margin-bottom: 10px;
-    background-color: #1a1a1a; /* خاکستری تیره */
-    color: #ffa733;
+    background-color: rgba(255,255,255,0.35);
+    color: #2b1a00;
     box-sizing: border-box;
+    backdrop-filter: blur(2px);
 }
 
 #cityBox::placeholder {
-    color: #ffbb66;
+    color: #5e3a00;
 }
 
 /* --- نتایج جستجو --- */
 #results {
-    border: 1px solid #ff7b00;
-    border-radius: 8px;
-    background-color: #1a1a1a;
+    border: 2px solid #3b1f00;
+    border-radius: 10px;
+    background-color: rgba(255,255,255,0.45);
     max-height: 200px;
     overflow-y: auto;
     margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.25);
 }
 
 #results div {
     padding: 12px;
     cursor: pointer;
-    border-bottom: 1px solid #ff9933;
-    color: #ffa733;
+    border-bottom: 1px solid #7a4a00;
+    color: #2b1a00;
+    transition: background 0.2s;
 }
 
 #results div:last-child {
@@ -62,26 +68,41 @@ h3 {
 }
 
 #results div:hover {
-    background-color: #332100; /* نارنجی خی*
+    background: rgba(250,200,150,0.55);
+}
 
+/* --- دکمه GPS --- */
 #locBtn {
-  display: inline-block;
-  margin-top: 8px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  background: #ff6f00;
-  color: white;
-  border: none;
-  cursor: pointer;
+    display: inline-block;
+    margin-top: 8px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #3b1f00;
+    color: #ffbb66;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.4);
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
 }
+
+#locBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 12px rgba(60,30,0,0.7);
+}
+
+#locBtn:active {
+    transform: scale(0.96);
+}
+
 #locBtn[disabled] {
-  opacity: 0.6;
-  cursor: not-allowed;
+    opacity: 0.5;
+    cursor: not-allowed;
 }
+
+/* پیام وضعیت */
 #status {
-  font-size: 0.95rem;
-  color: #333;
-  margin-top: 6px;
+    font-size: 0.95rem;
+    color: #2b1a00;
+    margin-top: 6px;
 }
-
-
