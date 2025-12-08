@@ -64,3 +64,24 @@ h3 {
 #results div:hover {
     background-color: #332100; /* نارنجی خی*
 
+#locBtn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #ff6f00;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+#locBtn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+#status {
+  font-size: 0.95rem;
+  color: #333;
+  margin-top: 6px;
+}
+
+
