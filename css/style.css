@@ -133,13 +133,12 @@ h3 {
     }
 }
 
-/* استایل دکمه‌های دعا */
+/* دکمه‌ها و بخش دعاها */
 .duas {
     direction: rtl;
-    max-width: 700px;
-    margin: 18px auto;
-    padding: 8px;
+    width: 100%; /* پهنای همان container */
     text-align: center;
+    margin-top: 20px;
 }
 
 .dua-btn {
@@ -157,6 +156,7 @@ h3 {
     background-color: #ff9a3c;
     color: white;
 }
+
 
 /* استایل پنل دعا */
 #duaModal {
@@ -231,3 +231,4 @@ h3 {
 .dua-footer button {
     padding: 8px 10px;
     border-radius: 8px;
+
