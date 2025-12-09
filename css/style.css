@@ -132,3 +132,102 @@ h3 {
         padding: 18px;
     }
 }
+
+/* استایل دکمه‌های دعا */
+.duas {
+    direction: rtl;
+    max-width: 700px;
+    margin: 18px auto;
+    padding: 8px;
+    text-align: center;
+}
+
+.dua-btn {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+.dua-btn:hover {
+    background-color: #ff9a3c;
+    color: white;
+}
+
+/* استایل پنل دعا */
+#duaModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    font-family: inherit;
+}
+
+.dua-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.dua-panel {
+    position: fixed;
+    right: 50%;
+    top: 50%;
+    transform: translate(50%, -50%);
+    width: min(800px, 94%);
+    max-height: 86vh;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    direction: rtl;
+    padding: 10px;
+}
+
+.dua-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.dua-header h4 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.dua-header button {
+    background: transparent;
+    border: 0;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.dua-content {
+    padding: 14px;
+    overflow: auto;
+    line-height: 1.9;
+    font-size: 17px;
+    white-space: pre-wrap; /* اطمینان از نمایش صحیح متون با فواصل */
+    text-align: right;
+}
+
+.dua-footer {
+    padding: 10px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start;
+}
+
+/* استایل برای دکمه‌ها در فوتر پنل */
+.dua-footer button {
+    padding: 8px 10px;
+    border-radius: 8px;
