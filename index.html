@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fa">
 <head>
@@ -9,27 +8,48 @@
 <link rel="stylesheet" href="/gps-test/css/style.css">
 <link rel="manifest" href="/gps-test/manifest.json">
 <meta name="theme-color" content="#ff6f00">
-
 </head>
 <body>
 <div class="container">
     <h3>نام شهر را وارد کنید</h3>
     <input type="text" id="cityBox" placeholder="مثلاً تهران">
-    <button id="locBtn" type="button">دریافت موقعیت فعلی (GPS)</button><div id="status" aria-live="polite" style="margin-top:8px;"></div>
+    <button id="locBtn" type="button">دریافت موقعیت فعلی (GPS)</button>
+    <div id="status" aria-live="polite" style="margin-top:8px;"></div>
     <div id="results"></div>
 
     <h3>اوقات شرعی امروز</h3>
     <div id="output"></div>
 </div>
-    
+
+<!-- بخش دعاها -->
+<div id="duas" class="duas">
+  <h3>مجموعه دعاها</h3>
+  <div>
+    <button class="dua-btn" data-dua="tawassul">دعاى توسل</button>
+    <button class="dua-btn" data-dua="ahd">دعای عهد</button>
+    <button class="dua-btn" data-dua="ziyara">زیارت عاشورا</button>
+  </div>
+</div>
+
+<!-- پنل دعا (Modal ساده) -->
+<div id="duaModal" aria-hidden="true">
+  <div class="dua-backdrop" id="duaBackdrop"></div>
+  <div class="dua-panel" role="dialog" aria-modal="true" aria-labelledby="duaTitle">
+    <header class="dua-header">
+      <h4 id="duaTitle">عنوان</h4>
+      <button id="closeDua" aria-label="بستن">✕</button>
+    </header>
+    <main class="dua-content" id="duaContent" tabindex="0">
+      <!-- متن دعا در اینجا نمایش داده می‌شود -->
+    </main>
+  </div>
+</div>
+
 <!-- فایل‌های جاوااسکریپت -->
 <script src="/gps-test/js/praytime.js"></script>
 <script src="/gps-test/js/cities.js"></script>
 <script src="/gps-test/js/app.js"></script>
+<script src="/gps-test/js/dua.js"></script>
+
 </body>
 </html>
-
-
-
-
-
