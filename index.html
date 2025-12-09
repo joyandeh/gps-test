@@ -11,6 +11,7 @@
 </head>
 <body>
 <div class="container">
+    <!-- بخش اوقات شرعی -->
     <h3>نام شهر را وارد کنید</h3>
     <input type="text" id="cityBox" placeholder="مثلاً تهران">
     <button id="locBtn" type="button">دریافت موقعیت فعلی (GPS)</button>
@@ -19,16 +20,16 @@
 
     <h3>اوقات شرعی امروز</h3>
     <div id="output"></div>
-</div>
 
-<!-- بخش دعاها -->
-<div id="duas" class="duas">
-  <h3>مجموعه دعاها</h3>
-  <div>
-    <button class="dua-btn" data-dua="tawassul">دعاى توسل</button>
-    <button class="dua-btn" data-dua="ahd">دعای عهد</button>
-    <button class="dua-btn" data-dua="ziyara">زیارت عاشورا</button>
-  </div>
+    <!-- بخش دعاها داخل همان کانتینر -->
+    <div id="duas" class="duas">
+      <h3>مجموعه دعاها</h3>
+      <div>
+        <button class="dua-btn" data-dua="tawassul">دعاى توسل</button>
+        <button class="dua-btn" data-dua="ahd">دعای عهد</button>
+        <button class="dua-btn" data-dua="ziyara">زیارت عاشورا</button>
+      </div>
+    </div>
 </div>
 
 <!-- پنل دعا (Modal ساده) -->
@@ -53,3 +54,4 @@
 
 </body>
 </html>
+
