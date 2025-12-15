@@ -6,6 +6,7 @@ const urlsToCache = [
     '/gps-test/js/app.js',
     '/gps-test/js/cities.js',
     '/gps-test/js/praytime.js',
+    '/gps-test/js/dua.js',
     '/gps-test/manifest.json',
     '/gps-test/cities.csv' 
 ];
@@ -28,4 +29,5 @@ self.addEventListener('fetch', event => {
         .then(response => response || fetch(event.request))
     );
 });
+
 
