@@ -2,106 +2,140 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>قبله‌نما با Magnetometer</title>
+  <title>قبله‌نما (Mag + Accel)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       margin: 0;
-      padding: 0;
       font-family: sans-serif;
       text-align: center;
       background: #f5f5f5;
     }
     h1 { margin-top: 20px; font-size: 22px; }
     #status { margin: 10px; font-size: 14px; color: #444; }
+
     .compass {
       width: 260px; height: 260px;
       margin: 30px auto; position: relative;
-      border-radius: 50%; border: 4px solid #333;
+      border-radius: 50%;
+      border: 4px solid #333;
       background: radial-gradient(circle, #fff 0%, #ddd 60%, #ccc 100%);
     }
+
     .kaaba {
-      position: absolute; width: 60px; height: 60px;
-      top: 10px; left: 50%; transform: translateX(-50%);
+      position: absolute;
+      width: 60px;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 3;
     }
+
     .needle {
-      position: absolute; width: 4px; height: 120px;
-      background: red; top: 20px; left: 50%;
-      transform-origin: 50% 90%; border-radius: 4px;
+      position: absolute;
+      width: 4px;
+      height: 120px;
+      background: red;
+      top: 20px;
+      left: 50%;
+      transform-origin: 50% 90%;
+      border-radius: 4px;
       z-index: 2;
     }
+
     .dot {
-      position: absolute; width: 16px; height: 16px;
-      background: #333; border-radius: 50%;
-      top: 50%; left: 50%; transform: translate(-50%, -50%);
-      border: 2px solid #fff; z-index: 4;
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: #333;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px solid #fff;
+      z-index: 4;
     }
   </style>
 </head>
 <body>
-  <h1>قبله‌نما</h1>
-  <div id="status">در حال آماده‌سازی...</div>
-  <div class="compass">
-    <img src="kaaba.png" class="kaaba" alt="Qibla">
-    <div id="needle" class="needle"></div>
-    <div class="dot"></div>
-  </div>
 
-  <script>
-    const QIBLA = 201; // زاویه قبله برای کرمانشاه
-    const statusEl = document.getElementById("status");
-    const needle = document.getElementById("needle");
+<h1>قبله‌نما</h1>
+<div id="status">در حال آماده‌سازی...</div>
 
-    let accel = null;
-    let mag = null;
+<div class="compass">
+  <img src="kaaba.png" class="kaaba" alt="Qibla">
+  <div id="needle" class="needle"></div>
+  <div class="dot"></div>
+</div>
 
-    function startSensors() {
-      if ('Accelerometer' in window && 'Magnetometer' in window) {
-        accel = new Accelerometer({ frequency: 60 });
-        mag = new Magnetometer({ frequency: 60 });
+<script>
+  const QIBLA = 201; // زاویه قبله کرمانشاه
+  const statusEl = document.getElementById("status");
+  const needle = document.getElementById("needle");
 
-        accel.addEventListener("reading", updateCompass);
-        mag.addEventListener("reading", updateCompass);
+  let accel, mag;
+  let ax, ay, az, mx, my, mz;
 
-        accel.start();
-        mag.start();
-
-        statusEl.textContent = "در حال دریافت داده...";
-      } else {
-        statusEl.textContent = "سنسورهای مورد نیاز پشتیبانی نمی‌شوند.";
-      }
+  function startSensors() {
+    if (!('Accelerometer' in window) || !('Magnetometer' in window)) {
+      statusEl.textContent = "ها سنسورها پشتیبانی نمی‌شوند.";
+      return;
     }
 
-    function updateCompass() {
-      if (!accel || !mag) return;
+    accel = new Accelerometer({ frequency: 60 });
+    mag = new Magnetometer({ frequency: 60 });
 
-      // داده‌های شتاب‌سنج
-      const ax = accel.x, ay = accel.y, az = accel.z;
+    accel.onreading = () => {
+      ax = accel.x;
+      ay = accel.y;
+      az = accel.z;
+      updateCompass();
+    };
 
-      // داده‌های مگنتومتر
-      const mx = mag.x, my = mag.y, mz = mag.z;
+    mag.onreading = () => {
+      mx = mag.x;
+      my = mag.y;
+      mz = mag.z;
+      updateCompass();
+    };
 
-      // محاسبه heading (زاویه نسبت به شمال مغناطیسی)
-      // فرمول ساده‌شده: استفاده از داده‌های ترکیبی
-      let heading = Math.atan2(my, mx) * (180 / Math.PI);
-      if (heading < 0) heading += 360;
+    accel.start();
+    mag.start();
 
-      if (isNaN(heading)) {
-        statusEl.textContent = "داده معتبر نیست.";
-        return;
-      }
+    statusEl.textContent = "گوشی را صاف نگه دارید و بچرخانید";
+  }
 
-      // اختلاف جهت گوشی با قبله
-      const relative = QIBLA - heading;
+  function updateCompass() {
+    if (
+      ax === undefined || ay === undefined || az === undefined ||
+      mx === undefined || my === undefined || mz === undefined
+    ) return;
 
-      // چرخش خط قرمز
-      needle.style.transform = `translateX(-50%) rotate(${relative}deg)`;
+    /* ===== محاسبه Pitch و Roll از شتاب‌سنج ===== */
+    const roll  = Math.atan2(ay, az);
+    const pitch = Math.atan(-ax / (ay * Math.sin(roll) + az * Math.cos(roll)));
 
-      statusEl.textContent = "گوشی را صاف نگه دارید و بچرخانید.";
-    }
+    /* ===== تیلت کامپنسیشن مگنومتر ===== */
+    const mx2 = mx * Math.cos(pitch) + mz * Math.sin(pitch);
+    const my2 =
+      mx * Math.sin(roll) * Math.sin(pitch) +
+      my * Math.cos(roll) -
+      mz * Math.sin(roll) * Math.cos(pitch);
 
-    window.onload = startSensors;
-  </script>
+    let heading = Math.atan2(-my2, mx2) * (180 / Math.PI);
+    if (heading < 0) heading += 360;
+
+    /* ===== اختلاف با قبله ===== */
+    const relative = QIBLA - heading;
+
+    needle.style.transform = `translateX(-50%) rotate(${relative}deg)`;
+
+    statusEl.textContent =
+      `Heading: ${heading.toFixed(1)}° | قبله: ${relative.toFixed(1)}°`;
+  }
+
+  window.onload = startSensors;
+</script>
+
 </body>
 </html>
