@@ -32,6 +32,13 @@
     </div>
 </div>
 
+<button id="openQibla" type="button">باز کردن صفحه قبله‌نما</button>
+ <script>
+document.getElementById("openQibla").addEventListener("click", function () {
+    window.location.href = "qibla.html";  // نام صفحه‌ای که می‌خواهی باز شود
+});
+</script>
+   
 <!-- پنل دعا (Modal ساده) -->
 <div id="duaModal" aria-hidden="true">
   <div class="dua-backdrop" id="duaBackdrop"></div>
@@ -54,4 +61,5 @@
 
 </body>
 </html>
+
 
