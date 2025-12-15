@@ -42,27 +42,28 @@
       overflow: hidden;
     }
 
-    /* عقربه شمال (خط قرمز) */
+    /* عکس کعبه – ثابت در بالا */
+    .qibla-image {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+    }
+
+    /* عقربه (خط قرمز) – می‌چرخد */
     .needle-north {
       position: absolute;
       width: 4px;
       height: 120px;
       background: red;
-      top: 10px;
+      top: 20px;
       left: 50%;
       transform-origin: 50% 90%;
       border-radius: 4px;
-    }
-
-    /* عکس قبله */
-    .qibla-image {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      top: 20px;
-      left: 50%;
-      transform-origin: 50% 200%;
-      transform: translateX(-50%);
+      z-index: 2;
     }
 
     .center-dot {
@@ -75,6 +76,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       border: 2px solid #fff;
+      z-index: 4;
     }
 
     #permissionBtn {
@@ -98,24 +100,23 @@
   <div class="compass-container">
     <div class="circle">
 
-      <!-- خط قرمز شمال -->
-      <div id="needleNorth" class="needle-north"></div>
-
-      <!-- عکس قبله -->
+      <!-- عکس کعبه – ثابت بالای قطب‌نما -->
       <img id="qiblaImg" class="qibla-image" src="/gps-test/kaaba.png" alt="Qibla">
+
+      <!-- خط قرمز – جهت قبله را نشان می‌دهد -->
+      <div id="needleNorth" class="needle-north"></div>
 
       <div class="center-dot"></div>
     </div>
   </div>
 
   <script>
-    // زاویه قبله برای کرمانشاه
+    // زاویه قبله برای کرمانشاه (درجه از شمال، جهت عقربه‌های ساعت)
     const QIBLA_BEARING = 222;
 
     const statusEl = document.getElementById('status');
     const permissionBtn = document.getElementById('permissionBtn');
     const needleNorth = document.getElementById('needleNorth');
-    const qiblaImg = document.getElementById('qiblaImg');
 
     function initCompass() {
       if (typeof DeviceOrientationEvent === 'undefined') {
@@ -149,26 +150,33 @@
     function handleOrientation(event) {
       let heading;
 
-      // ✅ حالت دقیق‌تر (iOS)
+      // iOS – مقدار آماده نسبت به شمال واقعی
       if (event.webkitCompassHeading !== undefined) {
-        heading = event.webkitCompassHeading; // 0 = شمال واقعی
+        heading = event.webkitCompassHeading; // 0 = شمال
       } else {
-        // ✅ حالت عمومی (اندروید)
-        heading = 360 - event.alpha; // تبدیل alpha به شمال واقعی
+        // اندروید – تبدیل alpha به جهت شمال
+        if (event.absolute === true || event.absolute === undefined) {
+          heading = 360 - event.alpha; 
+        } else {
+          heading = 360 - event.alpha;
+        }
       }
 
-      if (heading === null || isNaN(heading)) return;
+      if (heading == null || isNaN(heading)) {
+        statusEl.textContent = 'دادهٔ معتبر از حسگر دریافت نشد.';
+        return;
+      }
 
-      // ✅ چرخش عقربه شمال
-      needleNorth.style.transform = `translateX(-50%) rotate(${heading}deg)`;
+      // در این نسخه عقربه باید مستقیماً جهت قبله را نشان دهد.
+      // جهت قبله = QIBLA_BEARING از شمال
+      // گوشی الان در جهت "heading" از شمال است.
+      // اختلاف جهت ما نسبت به قبله:
+      const relative = QIBLA_BEARING - heading;
 
-      // ✅ جهت قبله نسبت به شمال
-      const qiblaRelative = QIBLA_BEARING - heading;
+      // چرخش خط قرمز: وقتی relative ≈ 0 یعنی گوشی رو به قبله است
+      needleNorth.style.transform = `translateX(-50%) rotate(${relative}deg)`;
 
-      // ✅ چرخش عکس قبله
-      qiblaImg.style.transform = `translateX(-50%) rotate(${qiblaRelative}deg)`;
-
-      statusEl.textContent = 'گوشی را صاف نگه دارید و آرام بچرخانید.';
+      statusEl.textContent = 'گوشی را صاف در دست بگیرید و بچرخانید تا خط قرمز زیر کعبه قرار بگیرد.';
     }
 
     window.onload = initCompass;
