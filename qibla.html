@@ -42,7 +42,7 @@
       overflow: hidden;
     }
 
-    /* ✅ عکس کعبه – ثابت در بالا */
+    /* ✅ کعبه ثابت */
     .qibla-image {
       position: absolute;
       width: 60px;
@@ -53,7 +53,7 @@
       z-index: 3;
     }
 
-    /* ✅ خط قرمز – جهت قبله را نشان می‌دهد */
+    /* ✅ خط قرمز متحرک */
     .needle {
       position: absolute;
       width: 4px;
@@ -156,14 +156,11 @@
         heading = event.webkitCompassHeading;
       }
 
-      // ✅ اندروید – حالت دقیق‌تر
-      else if (event.absolute === true && event.alpha !== null) {
-        heading = 360 - event.alpha;
-      }
-
-      // ✅ fallback
-      else {
-        heading = 360 - event.alpha;
+      // ✅ اندروید سامسونگ (A36 و مشابه)
+      else if (event.alpha !== null) {
+        // سامسونگ: 0 = شرق → تبدیل به شمال
+        heading = (event.alpha + 90) % 360;
+        heading = 360 - heading;
       }
 
       if (heading == null || isNaN(heading)) {
