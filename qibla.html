@@ -147,14 +147,25 @@
     }
 
     function handleOrientation(event) {
-      let alpha = event.alpha;
-      if (alpha === null) return;
+      let heading;
 
-      // چرخش عقربه شمال
-      needleNorth.style.transform = `translateX(-50%) rotate(${-alpha}deg)`;
+      // ✅ حالت دقیق‌تر (iOS)
+      if (event.webkitCompassHeading !== undefined) {
+        heading = event.webkitCompassHeading; // 0 = شمال واقعی
+      } else {
+        // ✅ حالت عمومی (اندروید)
+        heading = 360 - event.alpha; // تبدیل alpha به شمال واقعی
+      }
 
-      // چرخش عکس قبله
-      const qiblaRelative = QIBLA_BEARING - alpha;
+      if (heading === null || isNaN(heading)) return;
+
+      // ✅ چرخش عقربه شمال
+      needleNorth.style.transform = `translateX(-50%) rotate(${heading}deg)`;
+
+      // ✅ جهت قبله نسبت به شمال
+      const qiblaRelative = QIBLA_BEARING - heading;
+
+      // ✅ چرخش عکس قبله
       qiblaImg.style.transform = `translateX(-50%) rotate(${qiblaRelative}deg)`;
 
       statusEl.textContent = 'گوشی را صاف نگه دارید و آرام بچرخانید.';
