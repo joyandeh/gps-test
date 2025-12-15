@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl"><!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -119,9 +118,6 @@
     const permissionBtn = document.getElementById('permissionBtn');
     const needle = document.getElementById('needle');
 
-    let smoothHeading = 0;
-    let lastHeading = null;
-
     function initCompass() {
       if (typeof DeviceOrientationEvent === 'undefined') {
         statusEl.textContent = 'حسگر جهت‌یاب پشتیبانی نمی‌شود.';
@@ -134,7 +130,6 @@
         statusEl.textContent = 'برای فعال‌سازی، اجازه دسترسی بدهید.';
         permissionBtn.onclick = requestIOSPermission;
       } else {
-        window.addEventListener('deviceorientationabsolute', handleOrientation, true);
         window.addEventListener('deviceorientation', handleOrientation, true);
         statusEl.textContent = 'در حال دریافت داده‌های حسگر...';
       }
@@ -155,212 +150,13 @@
     function handleOrientation(event) {
       let heading;
 
-      // ✅ iOS – دقیق‌ترین حالت
+      // ✅ iOS
       if (event.webkitCompassHeading !== undefined) {
         heading = event.webkitCompassHeading;
       }
 
-      // ✅ اندروید سامسونگ – اصلاح پرش 90 درجه‌ای
+      // ✅ اندروید (اصلاح 90 درجه سامسونگ)
       else if (event.alpha !== null) {
-        let h1 = (event.alpha + 90) % 360;  // حالت سامسونگ
-        let h2 = event.alpha;               // حالت استاندارد
-
-        h1 = 360 - h1;
-        h2 = 360 - h2;
-
-        if (lastHeading === null) {
-          heading = h1;
-        } else {
-          const diff1 = Math.abs(h1 - lastHeading);
-          const diff2 = Math.abs(h2 - lastHeading);
-          heading = diff1 < diff2 ? h1 : h2;
-        }
-      }
-
-      if (heading == null || isNaN(heading)) {
-        statusEl.textContent = "حسگر جهت‌یاب داده معتبر نمی‌دهد.";
-        return;
-      }
-
-      lastHeading = heading;
-
-      // ✅ فیلتر نرم‌کننده (حرکت نرم و بدون پرش)
-      smoothHeading = smoothHeading * 0.85 + heading * 0.15;
-
-      // ✅ اختلاف جهت گوشی با قبله
-      const relative = QIBLA_BEARING - smoothHeading;
-
-      // ✅ چرخش خط قرمز
-      needle.style.transform = `translateX(-50%) rotate(${relative}deg)`;
-
-      statusEl.textContent = "گوشی را صاف نگه دارید و بچرخانید تا خط قرمز زیر کعبه قرار بگیرد.";
-    }
-
-    window.onload = initCompass;
-  </script>
-
-</body>
-</html>
-
-<head>
-  <meta charset="UTF-8" />
-  <title>قطب‌نمای قبله</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: sans-serif;
-      text-align: center;
-      background: #f5f5f5;
-    }
-
-    h1 {
-      margin-top: 20px;
-      font-size: 22px;
-    }
-
-    #status {
-      margin: 10px;
-      color: #444;
-      font-size: 14px;
-    }
-
-    .compass-container {
-      margin: 30px auto;
-      width: 260px;
-      height: 260px;
-      position: relative;
-    }
-
-    .circle {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 4px solid #333;
-      background: radial-gradient(circle, #ffffff 0%, #dddddd 60%, #cccccc 100%);
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* ✅ کعبه ثابت */
-    .qibla-image {
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 3;
-    }
-
-    /* ✅ خط قرمز متحرک */
-    .needle {
-      position: absolute;
-      width: 4px;
-      height: 120px;
-      background: red;
-      top: 20px;
-      left: 50%;
-      transform-origin: 50% 90%;
-      border-radius: 4px;
-      z-index: 2;
-    }
-
-    .center-dot {
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      background: #333;
-      border-radius: 50%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border: 2px solid #fff;
-      z-index: 4;
-    }
-
-    #permissionBtn {
-      padding: 8px 18px;
-      font-size: 14px;
-      border-radius: 6px;
-      border: none;
-      background: #1976d2;
-      color: white;
-      margin-top: 10px;
-      display: none;
-    }
-  </style>
-</head>
-<body>
-
-  <h1>قطب‌نمای قبله</h1>
-  <div id="status">در حال آماده‌سازی حسگر...</div>
-  <button id="permissionBtn">اجازه دسترسی به حسگر</button>
-
-  <div class="compass-container">
-    <div class="circle">
-
-      <!-- ✅ کعبه ثابت -->
-      <img id="qiblaImg" class="qibla-image" src="kaaba.png" alt="Qibla">
-
-      <!-- ✅ خط قرمز متحرک -->
-      <div id="needle" class="needle"></div>
-
-      <div class="center-dot"></div>
-    </div>
-  </div>
-
-  <script>
-    // ✅ زاویه قبله برای کرمانشاه
-    const QIBLA_BEARING = 222;
-
-    const statusEl = document.getElementById('status');
-    const permissionBtn = document.getElementById('permissionBtn');
-    const needle = document.getElementById('needle');
-
-    function initCompass() {
-      if (typeof DeviceOrientationEvent === 'undefined') {
-        statusEl.textContent = 'حسگر جهت‌یاب پشتیبانی نمی‌شود.';
-        return;
-      }
-
-      // ✅ iOS نیاز به اجازه دارد
-      if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-        permissionBtn.style.display = 'inline-block';
-        statusEl.textContent = 'برای فعال‌سازی، اجازه دسترسی بدهید.';
-        permissionBtn.onclick = requestIOSPermission;
-      } else {
-        window.addEventListener('deviceorientationabsolute', handleOrientation, true);
-        window.addEventListener('deviceorientation', handleOrientation, true);
-        statusEl.textContent = 'در حال دریافت داده‌های حسگر...';
-      }
-    }
-
-    function requestIOSPermission() {
-      DeviceOrientationEvent.requestPermission().then(res => {
-        if (res === 'granted') {
-          permissionBtn.style.display = 'none';
-          window.addEventListener('deviceorientation', handleOrientation, true);
-          statusEl.textContent = 'فعال شد.';
-        } else {
-          statusEl.textContent = 'اجازه داده نشد.';
-        }
-      });
-    }
-
-    function handleOrientation(event) {
-      let heading;
-
-      // ✅ iOS – دقیق‌ترین حالت
-      if (event.webkitCompassHeading !== undefined) {
-        heading = event.webkitCompassHeading;
-      }
-
-      // ✅ اندروید سامسونگ (A36 و مشابه)
-      else if (event.alpha !== null) {
-        // سامسونگ: 0 = شرق → تبدیل به شمال
         heading = (event.alpha + 90) % 360;
         heading = 360 - heading;
       }
@@ -376,7 +172,7 @@
       // ✅ چرخش خط قرمز
       needle.style.transform = `translateX(-50%) rotate(${relative}deg)`;
 
-      statusEl.textContent = "گوشی را صاف نگه دارید و بچرخانید تا خط قرمز زیر کعبه قرار بگیرد.";
+      statusEl.textContent = "گوشی را صاف نگه دارید و بچرخانید.";
     }
 
     window.onload = initCompass;
