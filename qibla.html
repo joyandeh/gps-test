@@ -42,7 +42,7 @@
       overflow: hidden;
     }
 
-    /* عکس کعبه – ثابت در بالا */
+    /* ✅ عکس کعبه – ثابت در بالا */
     .qibla-image {
       position: absolute;
       width: 60px;
@@ -53,8 +53,8 @@
       z-index: 3;
     }
 
-    /* عقربه (خط قرمز) – می‌چرخد */
-    .needle-north {
+    /* ✅ خط قرمز – جهت قبله را نشان می‌دهد */
+    .needle {
       position: absolute;
       width: 4px;
       height: 120px;
@@ -100,23 +100,23 @@
   <div class="compass-container">
     <div class="circle">
 
-      <!-- عکس کعبه – ثابت بالای قطب‌نما -->
-      <img id="qiblaImg" class="qibla-image" src="/gps-test/kaaba.png" alt="Qibla">
+      <!-- ✅ کعبه ثابت -->
+      <img id="qiblaImg" class="qibla-image" src="kaaba.png" alt="Qibla">
 
-      <!-- خط قرمز – جهت قبله را نشان می‌دهد -->
-      <div id="needleNorth" class="needle-north"></div>
+      <!-- ✅ خط قرمز متحرک -->
+      <div id="needle" class="needle"></div>
 
       <div class="center-dot"></div>
     </div>
   </div>
 
   <script>
-    // زاویه قبله برای کرمانشاه (درجه از شمال، جهت عقربه‌های ساعت)
+    // ✅ زاویه قبله برای کرمانشاه
     const QIBLA_BEARING = 222;
 
     const statusEl = document.getElementById('status');
     const permissionBtn = document.getElementById('permissionBtn');
-    const needleNorth = document.getElementById('needleNorth');
+    const needle = document.getElementById('needle');
 
     function initCompass() {
       if (typeof DeviceOrientationEvent === 'undefined') {
@@ -124,12 +124,13 @@
         return;
       }
 
-      // برای iOS باید اجازه بگیریم
+      // ✅ iOS نیاز به اجازه دارد
       if (typeof DeviceOrientationEvent.requestPermission === 'function') {
         permissionBtn.style.display = 'inline-block';
         statusEl.textContent = 'برای فعال‌سازی، اجازه دسترسی بدهید.';
         permissionBtn.onclick = requestIOSPermission;
       } else {
+        window.addEventListener('deviceorientationabsolute', handleOrientation, true);
         window.addEventListener('deviceorientation', handleOrientation, true);
         statusEl.textContent = 'در حال دریافت داده‌های حسگر...';
       }
@@ -150,33 +151,33 @@
     function handleOrientation(event) {
       let heading;
 
-      // iOS – مقدار آماده نسبت به شمال واقعی
+      // ✅ iOS – دقیق‌ترین حالت
       if (event.webkitCompassHeading !== undefined) {
-        heading = event.webkitCompassHeading; // 0 = شمال
-      } else {
-        // اندروید – تبدیل alpha به جهت شمال
-        if (event.absolute === true || event.absolute === undefined) {
-          heading = 360 - event.alpha; 
-        } else {
-          heading = 360 - event.alpha;
-        }
+        heading = event.webkitCompassHeading;
+      }
+
+      // ✅ اندروید – حالت دقیق‌تر
+      else if (event.absolute === true && event.alpha !== null) {
+        heading = 360 - event.alpha;
+      }
+
+      // ✅ fallback
+      else {
+        heading = 360 - event.alpha;
       }
 
       if (heading == null || isNaN(heading)) {
-        statusEl.textContent = 'دادهٔ معتبر از حسگر دریافت نشد.';
+        statusEl.textContent = "حسگر جهت‌یاب داده معتبر نمی‌دهد.";
         return;
       }
 
-      // در این نسخه عقربه باید مستقیماً جهت قبله را نشان دهد.
-      // جهت قبله = QIBLA_BEARING از شمال
-      // گوشی الان در جهت "heading" از شمال است.
-      // اختلاف جهت ما نسبت به قبله:
+      // ✅ اختلاف جهت گوشی با قبله
       const relative = QIBLA_BEARING - heading;
 
-      // چرخش خط قرمز: وقتی relative ≈ 0 یعنی گوشی رو به قبله است
-      needleNorth.style.transform = `translateX(-50%) rotate(${relative}deg)`;
+      // ✅ چرخش خط قرمز
+      needle.style.transform = `translateX(-50%) rotate(${relative}deg)`;
 
-      statusEl.textContent = 'گوشی را صاف در دست بگیرید و بچرخانید تا خط قرمز زیر کعبه قرار بگیرد.';
+      statusEl.textContent = "گوشی را صاف نگه دارید و بچرخانید تا خط قرمز زیر کعبه قرار بگیرد.";
     }
 
     window.onload = initCompass;
