@@ -4,6 +4,7 @@ const urlsToCache = [
     '/gps-test/index.html',
     '/gps-test/css/style.css',
     '/gps-test/js/app.js',
+    '/gps-test/js/dua.js',
     '/gps-test/js/cities.js',
     '/gps-test/js/praytime.js',
     '/gps-test/manifest.json',
